@@ -3,12 +3,9 @@ import data.TestConsts;
 import data.UserResponse;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import page.LoginPage;
-
-import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
@@ -30,11 +27,11 @@ public class LoginTest extends BaseTest{
     @Description("Выполнение перехода с главной страницы на страницу логина и выполнение входа")
     public void shouldOpenLoginFromMainPageAndSuccessLogin() {
         mainPage.clickOpenLoginPageButton();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
+        webdriver().shouldHave(url(TestConsts.URL_LOGIN));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel()
         );
         loginPage.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\" на главной странице", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
     }
@@ -44,10 +41,10 @@ public class LoginTest extends BaseTest{
     @Description("Выполнение перехода с главной страницы на страницу логина кнопку \"Войти в аккаунт\" и выполнение входа")
     public void shouldClickButtonOpenAccountPageFromMainPageAndSuccessLogin() {
         mainPage.clickOpenAccountPageButton();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
+        webdriver().shouldHave(url(TestConsts.URL_LOGIN));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel());
         loginPage.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\" на главной странице", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
     }

@@ -1,4 +1,3 @@
-import com.codeborne.selenide.Configuration;
 import data.TestConsts;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -12,10 +11,8 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class RegisterTest extends BaseTest {
-    // переменная Главной страницы
     RegisterPage registerPage;
     LoginPage loginPage = page(LoginPage.class);
     private String name;
@@ -25,7 +22,7 @@ public class RegisterTest extends BaseTest {
     @Override
     public void setUp() {
         super.setUp();
-        registerPage = open(TestConsts.BASE_URL + "/register",
+        registerPage = open(TestConsts.URL_REGISTER,
                 RegisterPage.class);
 
         name = "user_" + UUID.randomUUID();
@@ -37,7 +34,7 @@ public class RegisterTest extends BaseTest {
     @Description("Регистрация пользователя с корректными данными")
     public void shouldRegisterUser() {
         registerPage.setRegisterData(name, email, TestConsts.USER_PASS);
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
+        webdriver().shouldHave(url(TestConsts.URL_LOGIN));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel()
         );
     }
@@ -55,7 +52,7 @@ public class RegisterTest extends BaseTest {
     @DisplayName("Переход со страницы регистрации на страницу логина")
     public void shouldOpenLoginFromRegisterPage() {
         registerPage.clickLoginLink();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
+        webdriver().shouldHave(url(TestConsts.URL_LOGIN));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel());
     }
 }

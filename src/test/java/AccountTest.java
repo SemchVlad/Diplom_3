@@ -37,7 +37,7 @@ public class AccountTest extends BaseTest{
     @Description("Выполнение перехода с главной страницы на страницу аккаунта")
     public void shouldOpenAccountFromMainPage() {
         mainPage.clickOpenAccountPageButton();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/account/profile"));
+        webdriver().shouldHave(url(TestConsts.URL_PROFILE));
         assertEquals("Не отображена текст страницы \"Профиль\"", "Профиль", accountPage.getAccountLabel()
         );
     }
@@ -47,10 +47,10 @@ public class AccountTest extends BaseTest{
     @Description("Выполнение перехода на страницу аккаунта и выхода из аккаунта")
     public void shouldExitFromAccountPage() {
         mainPage.clickOpenAccountPageButton();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/account/profile"));
+        webdriver().shouldHave(url(TestConsts.URL_PROFILE));
         assertEquals("Не отображена текст страницы \"Профиль\"", "Профиль", accountPage.getAccountLabel());
         accountPage.clickExitButton();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
+        webdriver().shouldHave(url(TestConsts.URL_LOGIN));
         LoginPage loginPage = page(LoginPage.class);
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel());
     }

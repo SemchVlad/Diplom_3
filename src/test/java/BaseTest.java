@@ -18,7 +18,7 @@ public class BaseTest {
     public void setUp() {
         // Растягиваем браузер по размерам экрана пользователя.
         Configuration.startMaximized = true;
-        mainPage = open(TestConsts.BASE_URL + "/",
+        mainPage = open(TestConsts.URL_MAIN_PAGE,
                 MainPage.class);
     }
 

@@ -41,7 +41,7 @@ public class ConstructorTest extends BaseTest{
     @Description("Выполнение перехода со страницы аккаунта на страницу конструктора через кнопку Конструктор")
     public void shouldClickConstructorLinkForOpenMainPageFromAccountPage() {
         accountPage.clickConstructorLink();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
     }
@@ -52,7 +52,7 @@ public class ConstructorTest extends BaseTest{
             "и проверка переключения на кладку Булки")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabBun() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Соусы");
@@ -67,7 +67,7 @@ public class ConstructorTest extends BaseTest{
             "и нажатие на кладку Соусы")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabSauces() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Соусы");
@@ -81,7 +81,7 @@ public class ConstructorTest extends BaseTest{
             "и нажатие на кладку Начинки")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabFilling() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
+        webdriver().shouldHave(url(TestConsts.URL_MAIN_PAGE));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Начинки");
