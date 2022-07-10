@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import data.TestConsts;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
@@ -13,20 +14,20 @@ import static com.codeborne.selenide.WebDriverConditions.url;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class RegisterTest {
+public class RegisterTest extends BaseTest {
     // переменная Главной страницы
     RegisterPage registerPage;
-    LoginPage loginPage;
+    LoginPage loginPage = page(LoginPage.class);
     private String name;
     private String email;
 
     @Before
+    @Override
     public void setUp() {
-        // Растягиваем браузер по размерам экрана пользователя.
-        Configuration.startMaximized = true;
-        registerPage = open("https://stellarburgers.nomoreparties.site/register",
+        super.setUp();
+        registerPage = open(TestConsts.BASE_URL + "/register",
                 RegisterPage.class);
-        loginPage = page(LoginPage.class);
+
         name = "user_" + UUID.randomUUID();
         email = name + "@ya.ru";
     }
@@ -35,8 +36,8 @@ public class RegisterTest {
     @DisplayName("Регистрация пользователя")
     @Description("Регистрация пользователя с корректными данными")
     public void shouldRegisterUser() {
-        TestSteps.setRegisterData(name,email,"teasd123");
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/login"));
+        registerPage.setRegisterData(name, email, TestConsts.USER_PASS);
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel()
         );
     }
@@ -45,7 +46,7 @@ public class RegisterTest {
     @DisplayName("Некорректная регистрация пользователя")
     @Description("Выполнение регистрации с указанием пароля меньше 6 символов")
     public void shouldGetErrorForIncorrectPassword() {
-        TestSteps.setRegisterData(name,email,"tea3");
+        registerPage.setRegisterData(name, email,TestConsts.USER_PASS_NOT_VALID);
         assertEquals("Не получено ожидаемое сообщение об ошибке",
                 "Некорректный пароль", registerPage.getErrorMessage());
     }
@@ -54,7 +55,7 @@ public class RegisterTest {
     @DisplayName("Переход со страницы регистрации на страницу логина")
     public void shouldOpenLoginFromRegisterPage() {
         registerPage.clickLoginLink();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/login"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel());
     }
 }

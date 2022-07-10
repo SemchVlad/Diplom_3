@@ -1,8 +1,17 @@
 package data;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class User {
+    @Getter
+    @Setter
     private String name;
+    @Getter
+    @Setter
     private String password;
+    @Getter
+    @Setter
     private String email;
 
     public User(String email, String password, String name){
@@ -14,29 +23,5 @@ public class User {
     public User(String email, String password){
         this.name = email;
         this.password = password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

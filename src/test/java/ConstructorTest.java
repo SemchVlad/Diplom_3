@@ -1,4 +1,6 @@
 import com.codeborne.selenide.Configuration;
+import data.FactoryTestData;
+import data.TestConsts;
 import data.User;
 import data.UserResponse;
 import io.qameta.allure.Description;
@@ -7,8 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import page.AccountPage;
+import page.LoginPage;
 import page.MainPage;
-import utils.RestUtils;
+import client.UserClient;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -17,33 +20,20 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverConditions.url;
 import static org.junit.Assert.assertEquals;
 
-public class ConstructorTest {
-    MainPage mainPage;
-    AccountPage accountPage;
-    private UserResponse user;
+public class ConstructorTest extends BaseTest{
+    MainPage mainPage = page(MainPage.class);
+    AccountPage accountPage = page(AccountPage.class);
+    LoginPage loginPage = page(LoginPage.class);
 
     @Before
-    public void setUp() throws IOException {
-        // Растягиваем браузер по размерам экрана пользователя.
-        Configuration.startMaximized = true;
-        mainPage = open("https://stellarburgers.nomoreparties.site/",
-                MainPage.class);
-        String name = "user_" + UUID.randomUUID();
-        String email = name + "@ya.ru";
-        user = RestUtils.createUser(new User(email, "password", name)).as(UserResponse.class);
-        user.getUser().setPassword("password");
+    @Override
+    public void setUp() {
+        super.setUp();
+        user = userClient.createUser(FactoryTestData.createNewTestUser()).as(UserResponse.class);
+        user.getUser().setPassword(TestConsts.USER_PASS);
         mainPage.clickOpenLoginPageButton();
-        TestSteps.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
+        loginPage.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
         mainPage.clickOpenAccountPageButton();
-        accountPage = page(AccountPage.class);
-    }
-
-    @After
-    public void tearDown() throws IOException {
-        if(user.getAccessToken() != null) {
-            RestUtils.deleteUser(user.getAccessToken());
-        }
-        user = null;
     }
 
     @Test
@@ -51,7 +41,7 @@ public class ConstructorTest {
     @Description("Выполнение перехода со страницы аккаунта на страницу конструктора через кнопку Конструктор")
     public void shouldClickConstructorLinkForOpenMainPageFromAccountPage() {
         accountPage.clickConstructorLink();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
     }
@@ -62,7 +52,7 @@ public class ConstructorTest {
             "и проверка переключения на кладку Булки")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabBun() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Соусы");
@@ -77,7 +67,7 @@ public class ConstructorTest {
             "и нажатие на кладку Соусы")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabSauces() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Соусы");
@@ -91,7 +81,7 @@ public class ConstructorTest {
             "и нажатие на кладку Начинки")
     public void shouldClickLogoSBForOpenMainPageAndOpenTabFilling() {
         accountPage.clickBSLogoLink();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/"));
         assertEquals("Не отображена текст \"Соберите бургер\"", "Соберите бургер", mainPage.getCreateBurgerLabel()
         );
         mainPage.selectConstructorTab("Начинки");

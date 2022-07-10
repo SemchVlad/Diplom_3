@@ -1,6 +1,7 @@
 package page;
 
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
@@ -40,5 +41,13 @@ public class RegisterPage {
 
     public void clickLoginLink() {
         loginLink.click();
+    }
+
+    @Step("Ввод данных на форме регистрации")
+    public void setRegisterData(String name, String email, String password) {
+        setName(name);
+        setEmail(email);
+        setPassword(password);
+        clickButtonRegister();
     }
 }

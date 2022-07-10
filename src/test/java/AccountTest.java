@@ -1,58 +1,43 @@
-import com.codeborne.selenide.Configuration;
-import data.User;
+import data.FactoryTestData;
+import data.TestConsts;
 import data.UserResponse;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import page.AccountPage;
 import page.LoginPage;
 import page.MainPage;
-import utils.RestUtils;
-
-import java.io.IOException;
-import java.util.UUID;
+import client.UserClient;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.webdriver;
 import static com.codeborne.selenide.WebDriverConditions.url;
 import static org.junit.Assert.assertEquals;
 
-public class AccountTest {
-    MainPage mainPage;
-    AccountPage accountPage;
-    private UserResponse user;
+public class AccountTest extends BaseTest{
+    MainPage mainPage = page(MainPage.class);
+    AccountPage accountPage = page(AccountPage.class);
+    LoginPage loginPage = page(LoginPage.class);
+    UserClient userClient = new UserClient();
 
     @Before
-    public void setUp() throws IOException {
-        // Растягиваем браузер по размерам экрана пользователя.
-        Configuration.startMaximized = true;
-        mainPage = open("https://stellarburgers.nomoreparties.site/",
-                MainPage.class);
-        accountPage = page(AccountPage.class);
-        String name = "user_" + UUID.randomUUID();
-        String email = name + "@ya.ru";
-        user = RestUtils.createUser(new User(email, "password", name)).as(UserResponse.class);
-        user.getUser().setPassword("password");
-        mainPage.clickOpenLoginPageButton();
-        TestSteps.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
-    }
+    @Override
+    public void setUp() {
+        super.setUp();
 
-    @After
-    public void tearDown() throws IOException {
-        if(user.getAccessToken() != null) {
-            RestUtils.deleteUser(user.getAccessToken());
-        }
-        user = null;
+        user = userClient.createUser(FactoryTestData.createNewTestUser()).as(UserResponse.class);
+        user.getUser().setPassword(TestConsts.USER_PASS);
+        mainPage.clickOpenLoginPageButton();
+        loginPage.executeLogin(user.getUser().getEmail(), user.getUser().getPassword());
     }
 
     @Test
     @DisplayName("Открытие страницы аккаунта")
     @Description("Выполнение перехода с главной страницы на страницу аккаунта")
     public void shouldOpenAccountFromMainPage() {
-        TestSteps.openAccount();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/account/profile"));
+        mainPage.clickOpenAccountPageButton();
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/account/profile"));
         assertEquals("Не отображена текст страницы \"Профиль\"", "Профиль", accountPage.getAccountLabel()
         );
     }
@@ -61,11 +46,11 @@ public class AccountTest {
     @DisplayName("Выполнение выхода из аккаунта")
     @Description("Выполнение перехода на страницу аккаунта и выхода из аккаунта")
     public void shouldExitFromAccountPage() {
-        TestSteps.openAccount();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/account/profile"));
+        mainPage.clickOpenAccountPageButton();
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/account/profile"));
         assertEquals("Не отображена текст страницы \"Профиль\"", "Профиль", accountPage.getAccountLabel());
         accountPage.clickExitButton();
-        webdriver().shouldHave(url("https://stellarburgers.nomoreparties.site/login"));
+        webdriver().shouldHave(url(TestConsts.BASE_URL + "/login"));
         LoginPage loginPage = page(LoginPage.class);
         assertEquals("Не отображена страница Логина", "Вход", loginPage.getLoginLabel());
     }
